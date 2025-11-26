@@ -1988,7 +1988,7 @@ function generateMentalMath() {
 }
 
 // 下载日历计划表
-function downloadCalendar() {
+async function downloadCalendar() {
     const select = document.getElementById('calendarSelect');
     const selectedFile = select.value;
     
@@ -1997,28 +1997,70 @@ function downloadCalendar() {
         return;
     }
     
-    // 构建文件路径
-    const filePath = `2025年日历计划表模板合集 (PDF版)/${selectedFile}`;
-    
-    // 创建一个隐藏的a标签来触发下载
-    const link = document.createElement('a');
-    link.href = filePath;
-    link.download = selectedFile;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // 显示成功提示
     const btn = document.getElementById('downloadCalendarBtn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '✅ 下载成功';
-    btn.disabled = true;
     
-    setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }, 2000);
+    try {
+        // 显示下载中提示
+        btn.innerHTML = '⏳ 下载中...';
+        btn.disabled = true;
+        
+        // 构建文件路径
+        const filePath = `2025年日历计划表模板合集 (PDF版)/${selectedFile}`;
+        
+        // 使用fetch获取文件
+        const response = await fetch(filePath);
+        
+        if (!response.ok) {
+            throw new Error(`文件加载失败: ${response.status}`);
+        }
+        
+        // 获取文件blob
+        const blob = await response.blob();
+        
+        // 创建下载链接
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = selectedFile;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        
+        // 清理
+        setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+        
+        // 显示成功提示
+        btn.innerHTML = '✅ 下载成功';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 2000);
+        
+    } catch (error) {
+        console.error('下载失败:', error);
+        
+        // 显示错误提示
+        btn.innerHTML = '❌ 下载失败';
+        
+        // 显示详细错误信息
+        alert(`下载失败！
+
+可能的原因：
+1. 文件不存在，请确保PDF文件在正确的目录中
+2. 文件路径：2025年日历计划表模板合集 (PDF版)/${selectedFile}
+
+错误详情: ${error.message}`);
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 2000);
+    }
 }
 
 /// 预览日历（显示日历信息和描述）v2
