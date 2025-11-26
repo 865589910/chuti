@@ -508,6 +508,11 @@ function generateCarryBorrow() {
         let tenSum = tensDigit1 + tensDigit2;
         let targetTensResult = needCarry ? (tenSum + 1) : tenSum;
         
+        // 确保得数是两位数（10-99），如果会产生三位数则重新生成
+        if (targetTensResult >= 10) {
+            return generateCarryBorrow();
+        }
+        
         // 如果进位，8+□≥10，□≥2，可填2-9，共8个
         // 如果不进位，8+□<10，□≤1，可填0-1，共2个
         let validNumbers = needCarry ? [2,3,4,5,6,7,8,9] : [0,1];
@@ -520,8 +525,8 @@ function generateCarryBorrow() {
     } else {
         // 减法：71-4□，个位1-□，十位7-4=3
         // 如果个位1-□≥0，十位结果是3；如果个位1-□<0，十位结果是2（需要退位）
-        let num1 = random(20, 100);
-        let tensDigit2 = random(1, Math.floor(num1 / 10) - 1); // 确保十位不为0，且小于被减数的十位
+        let num1 = random(20, 99); // 被减数是两位数（20-99）
+        let tensDigit2 = random(1, Math.min(8, Math.floor(num1 / 10) - 1)); // 确保十位不为0，且小于被减数的十位，且不超过8
         let unitsDigit1 = num1 % 10;
         
         let num2_tens = tensDigit2 * 10;
@@ -530,6 +535,11 @@ function generateCarryBorrow() {
         let needBorrow = random(0, 1) === 1; // 随机决定是否退位
         let tenDiff = Math.floor(num1 / 10) - tensDigit2;
         let targetTensResult = needBorrow ? (tenDiff - 1) : tenDiff;
+        
+        // 确保得数是两位数（10-99），十位至少为1
+        if (targetTensResult < 1) {
+            return generateCarryBorrow();
+        }
         
         // 如果需要退位，unitsDigit1-□<0，□>unitsDigit1，可填数字个数为9-unitsDigit1
         // 如果不需要退位，unitsDigit1-□≥0，□≤unitsDigit1，可填数字个数为unitsDigit1+1
