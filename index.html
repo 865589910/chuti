@@ -64,7 +64,7 @@
         <div class="calendar-section">
             <h3>📅 日历计划表下载：</h3>
             <div class="calendar-controls">
-                <select id="calendarSelect" class="calendar-select">
+                <select id="calendarSelect" class="calendar-select" onchange="previewCalendar()">
                     <option value="">-- 请选择日历模板 --</option>
                     <option value="2025年日历+计划表（可爱橘猫版）.pdf">🐱 2025年日历+计划表（可爱橘猫版）</option>
                     <option value="2025年日历（横屏）.pdf">📄 2025年日历（横屏）</option>
@@ -78,6 +78,15 @@
                 </select>
                 <button class="btn btn-calendar" onclick="downloadCalendar()" id="downloadCalendarBtn">📥 下载日历</button>
             </div>
+            
+            <!-- 日历预览区域 -->
+            <div id="calendarPreview" class="calendar-preview" style="display: none;">
+                <h4>👀 日历预览（前两页）</h4>
+                <div class="preview-container">
+                    <canvas id="pdfCanvas1" class="pdf-canvas"></canvas>
+                    <canvas id="pdfCanvas2" class="pdf-canvas"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -90,6 +99,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="vertical.js"></script>
     <script src="exam.js"></script>
 </body>

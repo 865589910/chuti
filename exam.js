@@ -2020,3 +2020,71 @@ function downloadCalendar() {
         btn.disabled = false;
     }, 2000);
 }
+
+// 预览日历PDF（前两页）
+async function previewCalendar() {
+    const select = document.getElementById('calendarSelect');
+    const selectedFile = select.value;
+    const previewDiv = document.getElementById('calendarPreview');
+    
+    if (!selectedFile) {
+        previewDiv.style.display = 'none';
+        return;
+    }
+    
+    // 显示预览区域
+    previewDiv.style.display = 'block';
+    
+    // 构建文件路径
+    const filePath = `2025年日历计划表模板合集 (PDF版)/${selectedFile}`;
+    
+    try {
+        // 配置PDF.js的worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        // 加载PDF文件
+        const loadingTask = pdfjsLib.getDocument(filePath);
+        const pdf = await loadingTask.promise;
+        
+        // 渲染第一页
+        if (pdf.numPages >= 1) {
+            const page1 = await pdf.getPage(1);
+            renderPDFPage(page1, 'pdfCanvas1');
+        }
+        
+        // 渲染第二页
+        if (pdf.numPages >= 2) {
+            const page2 = await pdf.getPage(2);
+            renderPDFPage(page2, 'pdfCanvas2');
+        } else {
+            // 如果只有一页，隐藏第二个canvas
+            document.getElementById('pdfCanvas2').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('无法加载PDF文件:', error);
+        previewDiv.innerHTML = '<p style="text-align: center; color: #e74c3c;">⚠️ 无法预览该日历，请确保文件存在于正确的目录中。</p>';
+    }
+}
+
+// 渲染PDF页面到canvas
+function renderPDFPage(page, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const context = canvas.getContext('2d');
+    
+    // 设置缩放比例
+    const scale = 1.5;
+    const viewport = page.getViewport({ scale: scale });
+    
+    // 设置canvas尺寸
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    canvas.style.display = 'block';
+    
+    // 渲染PDF页面
+    const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+    };
+    
+    page.render(renderContext);
+}
