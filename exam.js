@@ -2021,8 +2021,9 @@ function downloadCalendar() {
     }, 2000);
 }
 
-// 预览日历PDF（前两页）
-async function previewCalendar() {
+/// 预览日历（显示日历信息和描述）v2
+function previewCalendar() {
+    console.log('预览日历函数被调用 - 版本2');
     const select = document.getElementById('calendarSelect');
     const selectedFile = select.value;
     const previewDiv = document.getElementById('calendarPreview');
@@ -2035,85 +2036,124 @@ async function previewCalendar() {
     // 显示预览区域
     previewDiv.style.display = 'block';
     
-    // 显示加载提示
-    previewDiv.innerHTML = `
-        <div style="text-align: center; padding: 40px;">
-            <div style="font-size: 3em; margin-bottom: 20px;">⏳</div>
-            <p style="color: #667eea; font-size: 1.2em;">正在加载日历预览...</p>
-        </div>
-    `;
+    // 日历信息数据
+    const calendarInfo = {
+        '2025年日历+计划表（可爱橘猫版）.pdf': {
+            icon: '🐱',
+            name: '2025年日历+计划表（可爱橘猫版）',
+            size: '78MB',
+            pages: '13页',
+            features: ['月度日历', '每日计划表', '可爱橘猫插图', '适合打印'],
+            description: '温馨可爱的橘猫主题日历，包含完整的2025年月历和详细的每日计划表，适合喜欢猫咪的朋友使用。'
+        },
+        '2025年日历（横屏）.pdf': {
+            icon: '📄',
+            name: '2025年日历（横屏）',
+            size: '262KB',
+            pages: '1页',
+            features: ['横屏设计', '全年一览', '简洁明了', '适合墙贴'],
+            description: '横屏设计的全年日历，一页展示2025年全年，简洁大方，适合打印后贴在墙上使用。'
+        },
+        '2025年黑猫日历（彩印版）.pdf': {
+            icon: '🐈‍⬛',
+            name: '2025年黑猫日历（彩印版）',
+            size: '81MB',
+            pages: '13页',
+            features: ['精美彩印', '黑猫主题', '月度计划', '高清图片'],
+            description: '精美的黑猫主题彩色日历，高清图片配合月度计划功能，适合彩色打印使用。'
+        },
+        '2025年黑白日历（新款）.pdf': {
+            icon: '⚫',
+            name: '2025年黑白日历（新款）',
+            size: '3.3MB',
+            pages: '13页',
+            features: ['黑白设计', '节省墨水', '简约风格', '经济实用'],
+            description: '简约黑白设计的日历，节省打印成本，清晰的排版设计，适合日常使用。'
+        },
+        '25年1-12月份计划表（日历+计划表结合）.pdf': {
+            icon: '📋',
+            name: '25年1-12月份计划表',
+            size: '20MB',
+            pages: '12页',
+            features: ['月度计划', '日历结合', '任务管理', '目标追踪'],
+            description: '日历与计划表完美结合，每月一页，帮助您更好地规划和管理时间。'
+        },
+        '25年小鸭子日历+计划表（横屏）.pdf': {
+            icon: '🦆',
+            name: '25年小鸭子日历+计划表',
+            size: '66MB',
+            pages: '13页',
+            features: ['可爱小鸭', '横屏布局', '月度计划', '彩色设计'],
+            description: '可爱的小鸭子主题横屏日历，配有每月计划表，萌趣设计让规划变得更有趣。'
+        },
+        '25年日历横板图（秋天主题）.pdf': {
+            icon: '🍂',
+            name: '25年日历横板图（秋天主题）',
+            size: '1.5MB',
+            pages: '1页',
+            features: ['秋天主题', '横板设计', '温馨色调', '全年一览'],
+            description: '温馨的秋天主题日历，横板设计，一页展示全年，适合办公室或家居装饰。'
+        },
+        '25年日历（秋天风格）.pdf': {
+            icon: '🍁',
+            name: '25年日历（秋天风格）',
+            size: '1.2MB',
+            pages: '12页',
+            features: ['秋天风格', '月度分页', '自然色调', '清新设计'],
+            description: '清新的秋天风格日历，每月独立一页，自然的色调让人感觉舒适惬意。'
+        },
+        '25年粉色白猫日历+月计划表（横屏）.pdf': {
+            icon: '🐈',
+            name: '25年粉色白猫日历+月计划表',
+            size: '58MB',
+            pages: '13页',
+            features: ['粉色系', '白猫主题', '横屏设计', '月度计划'],
+            description: '温柔的粉色白猫主题日历，横屏设计配合月度计划表，甜美又实用。'
+        }
+    };
     
-    // 构建文件路径（优先使用本地路径，如果失败则尝试GitHub LFS路径）
-    const localPath = `2025年日历计划表模板合集 (PDF版)/${selectedFile}`;
-    const githubPath = `https://media.githubusercontent.com/media/865589910/chuti/main/2025年日历计划表模板合集 (PDF版)/${encodeURIComponent(selectedFile)}`;
+    const info = calendarInfo[selectedFile];
     
-    try {
-        // 配置PDF.js的worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        
-        let pdf;
-        try {
-            // 首先尝试加载本地文件
-            const loadingTask = pdfjsLib.getDocument(localPath);
-            pdf = await loadingTask.promise;
-        } catch (localError) {
-            // 如果本地加载失败，尝试从GitHub加载
-            console.log('本地文件未找到，尝试从GitHub加载...');
-            const loadingTask = pdfjsLib.getDocument({
-                url: githubPath,
-                httpHeaders: {
-                    'Accept': 'application/pdf'
-                }
-            });
-            pdf = await loadingTask.promise;
-        }
-        
-        // 清空加载提示
+    if (info) {
         previewDiv.innerHTML = `
-            <h4>👀 日历预览（前两页）</h4>
-            <div class="preview-container">
-                <canvas id="pdfCanvas1" class="pdf-canvas"></canvas>
-                <canvas id="pdfCanvas2" class="pdf-canvas"></canvas>
-            </div>
-        `;
-        
-        // 渲染第一页
-        if (pdf.numPages >= 1) {
-            const page1 = await pdf.getPage(1);
-            renderPDFPage(page1, 'pdfCanvas1');
-        }
-        
-        // 渲染第二页
-        if (pdf.numPages >= 2) {
-            const page2 = await pdf.getPage(2);
-            renderPDFPage(page2, 'pdfCanvas2');
-        } else {
-            // 如果只有一页，隐藏第二个canvas
-            document.getElementById('pdfCanvas2').style.display = 'none';
-        }
-    } catch (error) {
-        console.error('无法加载PDF文件:', error);
-        // 显示友好的错误提示
-        previewDiv.innerHTML = `
-            <div style="padding: 30px; text-align: center; background: #fff3cd; border-radius: 10px; border: 2px solid #ffc107;">
-                <h4 style="color: #856404; margin-bottom: 15px;">📋 日历预览功能说明</h4>
-                <p style="color: #856404; line-height: 1.8; margin-bottom: 15px;">
-                    由于日历PDF文件较大（总计约310MB），未上传到GitHub仓库。<br>
-                    如需使用日历预览和下载功能，请按以下步骤操作：
-                </p>
-                <div style="text-align: left; max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px;">
-                    <p style="font-weight: bold; color: #333; margin-bottom: 10px;">✅ 本地使用方法：</p>
-                    <ol style="color: #555; line-height: 2;">
-                        <li>在项目根目录创建文件夹：<code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px;">2025年日历计划表模板合集 (PDF版)</code></li>
-                        <li>将日历PDF文件放入该文件夹</li>
-                        <li>刷新页面，即可预览和下载</li>
-                    </ol>
-                    <p style="font-weight: bold; color: #333; margin: 15px 0 10px 0;">📌 当前选择：</p>
-                    <p style="color: #667eea; font-weight: bold;">${selectedFile}</p>
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; color: white;">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <div style="font-size: 4em; margin-bottom: 15px;">${info.icon}</div>
+                    <h3 style="margin: 0; font-size: 1.5em;">${info.name}</h3>
                 </div>
-                <p style="color: #856404; margin-top: 20px; font-size: 0.9em;">
-                    💡 提示：您也可以直接点击"下载日历"按钮尝试下载（需要文件存在）
-                </p>
+                
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <p style="margin: 0 0 15px 0; line-height: 1.8;">${info.description}</p>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9em;">
+                            📄 ${info.pages}
+                        </span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9em;">
+                            💾 ${info.size}
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px;">
+                    <h4 style="margin: 0 0 15px 0; font-size: 1.1em;">✨ 特色功能：</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                        ${info.features.map(feature => `
+                            <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                                ✓ ${feature}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <p style="margin: 0 0 15px 0; opacity: 0.9;">
+                        💡 点击下方"下载日历"按钮即可获取完整PDF文件
+                    </p>
+                    <button class="btn btn-calendar" onclick="downloadCalendar()" 
+                            style="background: white; color: #667eea; font-weight: bold; border: none; padding: 12px 30px; border-radius: 25px; cursor: pointer; font-size: 1.1em;">
+                        📥 立即下载
+                    </button>
+                </div>
             </div>
         `;
     }
