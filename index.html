@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二年级数学出题系统</title>
+    <link rel="stylesheet" href="exam.css">
+</head>
+<body>
+    <div class="header no-print">
+        <h1>📚 二年级数学出题系统</h1>
+        <p>全面覆盖各类型数学题目</p>
+    </div>
+
+    <div class="config-panel no-print">
+        <h3>选择题型（点击增加题型数量）：</h3>
+        <div class="checkbox-group">
+            <label onclick="toggleQuestionType('mental')">
+                <span class="type-name">🧠 口算练习</span>
+                <span class="type-count" id="mental-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('vertical')">
+                <span class="type-name">🔢 竖式练习</span>
+                <span class="type-count" id="vertical-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('basic')">
+                <span class="type-name">📝 基础算式理解</span>
+                <span class="type-count" id="basic-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('multiplication')">
+                <span class="type-name">🔢 乘法口诀</span>
+                <span class="type-count" id="multiplication-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('carry')">
+                <span class="type-name">➕ 进位退位分析</span>
+                <span class="type-count" id="carry-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('mistake')">
+                <span class="type-name">🔍 看错题分析</span>
+                <span class="type-count" id="mistake-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('drawing')">
+                <span class="type-name">📏 画线题</span>
+                <span class="type-count" id="drawing-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('shopping')">
+                <span class="type-name">💰 购物问题</span>
+                <span class="type-count" id="shopping-count">0</span>
+            </label>
+            <label onclick="toggleQuestionType('direction')">
+                <span class="type-name">🧭 方向识别</span>
+                <span class="type-count" id="direction-count">0</span>
+            </label>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="resetQuestionTypes()">🔄 重置选择</button>
+            <button class="btn btn-primary" onclick="generateAllQuestions()">🎲 生成题目</button>
+            <button class="btn btn-info" onclick="toggleAnswers()" id="toggleAnswersBtn">👁️ 显示答案</button>
+            <button class="btn btn-warning" onclick="toggleExplanation()" id="toggleExplanationBtn">📖 显示详解</button>
+            <button class="btn btn-success" onclick="downloadPDF()" id="downloadPDFBtn">📥 下载PDF</button>
+        </div>
+        
+        <div class="calendar-section">
+            <h3>📅 日历计划表下载：</h3>
+            <div class="calendar-controls">
+                <select id="calendarSelect" class="calendar-select">
+                    <option value="">-- 请选择日历模板 --</option>
+                    <option value="2025年日历+计划表（可爱橘猫版）.pdf">🐱 2025年日历+计划表（可爱橘猫版）</option>
+                    <option value="2025年日历（横屏）.pdf">📄 2025年日历（横屏）</option>
+                    <option value="2025年黑猫日历（彩印版）.pdf">🐈‍⬛ 2025年黑猫日历（彩印版）</option>
+                    <option value="2025年黑白日历（新款）.pdf">⚫ 2025年黑白日历（新款）</option>
+                    <option value="25年1-12月份计划表（日历+计划表结合）.pdf">📋 25年1-12月份计划表（日历+计划表结合）</option>
+                    <option value="25年小鸭子日历+计划表（横屏）.pdf">🦆 25年小鸭子日历+计划表（横屏）</option>
+                    <option value="25年日历横板图（秋天主题）.pdf">🍂 25年日历横板图（秋天主题）</option>
+                    <option value="25年日历（秋天风格）.pdf">🍁 25年日历（秋天风格）</option>
+                    <option value="25年粉色白猫日历+月计划表（横屏）.pdf">🐈 25年粉色白猫日历+月计划表（横屏）</option>
+                </select>
+                <button class="btn btn-calendar" onclick="downloadCalendar()" id="downloadCalendarBtn">📥 下载日历</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="questionsContainer" class="questions-container">
+        <div class="welcome-message">
+            <h2>欢迎使用数学出题系统</h2>
+            <p>请点击上方题型增加题目数量，然后点击"生成题目"开始</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="vertical.js"></script>
+    <script src="exam.js"></script>
+</body>
+</html>

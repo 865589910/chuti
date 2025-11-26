@@ -1,0 +1,252 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.header {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    color: #333;
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-success {
+    background: #48bb78;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #38a169;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(72, 187, 120, 0.3);
+}
+
+.exercise-container {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 30px;
+}
+
+.exercise-item {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.expression {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.vertical-calc {
+    display: inline-block;
+    font-family: "Courier New", monospace;
+    font-size: 28px;
+    line-height: 1.6;
+}
+
+/* 数位框 */
+.place-value-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.place-box {
+    width: 55px;
+    height: 45px;
+    border: 2px solid #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #000000;
+    font-weight: bold;
+    background: #ffffff;
+    border-radius: 4px;
+}
+
+/* 数字行 */
+.number-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.number-cell {
+    width: 55px;
+    height: 50px;
+    border: 2px solid #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    background: white;
+    border-radius: 4px;
+}
+
+/* 运算符号 */
+.operator-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.operator-circle {
+    width: 38px;
+    height: 38px;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    background: #ffffff;
+}
+
+/* 进位/退位标记 */
+.carry-mark {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    background: white;
+    flex-shrink: 0;
+}
+
+.borrow-mark {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    background: white;
+    flex-shrink: 0;
+}
+
+/* 横线 */
+.horizontal-line {
+    width: 100%;
+    height: 3px;
+    background: #333;
+    margin: 8px 0;
+}
+
+/* 答案行 */
+.answer-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-top: 10px;
+}
+
+.answer-box {
+    width: 55px;
+    height: 50px;
+    border: 2px solid #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    background: #ffffff;
+    border-radius: 4px;
+}
+
+.footer {
+    text-align: center;
+    color: white;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+/* 打印样式 */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .exercise-container {
+        box-shadow: none;
+        padding: 20px;
+        page-break-before: auto;
+    }
+
+    .exercise-item {
+        page-break-inside: avoid;
+    }
+}
+
+@page {
+    size: A4;
+    margin: 15mm;
+}
