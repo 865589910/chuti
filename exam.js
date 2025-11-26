@@ -2062,7 +2062,29 @@ async function previewCalendar() {
         }
     } catch (error) {
         console.error('无法加载PDF文件:', error);
-        previewDiv.innerHTML = '<p style="text-align: center; color: #e74c3c;">⚠️ 无法预览该日历，请确保文件存在于正确的目录中。</p>';
+        // 显示友好的错误提示
+        previewDiv.innerHTML = `
+            <div style="padding: 30px; text-align: center; background: #fff3cd; border-radius: 10px; border: 2px solid #ffc107;">
+                <h4 style="color: #856404; margin-bottom: 15px;">📋 日历预览功能说明</h4>
+                <p style="color: #856404; line-height: 1.8; margin-bottom: 15px;">
+                    由于日历PDF文件较大（总计约310MB），未上传到GitHub仓库。<br>
+                    如需使用日历预览和下载功能，请按以下步骤操作：
+                </p>
+                <div style="text-align: left; max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px;">
+                    <p style="font-weight: bold; color: #333; margin-bottom: 10px;">✅ 本地使用方法：</p>
+                    <ol style="color: #555; line-height: 2;">
+                        <li>在项目根目录创建文件夹：<code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px;">2025年日历计划表模板合集 (PDF版)</code></li>
+                        <li>将日历PDF文件放入该文件夹</li>
+                        <li>刷新页面，即可预览和下载</li>
+                    </ol>
+                    <p style="font-weight: bold; color: #333; margin: 15px 0 10px 0;">📌 当前选择：</p>
+                    <p style="color: #667eea; font-weight: bold;">${selectedFile}</p>
+                </div>
+                <p style="color: #856404; margin-top: 20px; font-size: 0.9em;">
+                    💡 提示：您也可以直接点击"下载日历"按钮尝试下载（需要文件存在）
+                </p>
+            </div>
+        `;
     }
 }
 
