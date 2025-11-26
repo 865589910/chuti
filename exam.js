@@ -2035,16 +2035,47 @@ async function previewCalendar() {
     // 显示预览区域
     previewDiv.style.display = 'block';
     
-    // 构建文件路径
-    const filePath = `2025年日历计划表模板合集 (PDF版)/${selectedFile}`;
+    // 显示加载提示
+    previewDiv.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 3em; margin-bottom: 20px;">⏳</div>
+            <p style="color: #667eea; font-size: 1.2em;">正在加载日历预览...</p>
+        </div>
+    `;
+    
+    // 构建文件路径（优先使用本地路径，如果失败则尝试GitHub LFS路径）
+    const localPath = `2025年日历计划表模板合集 (PDF版)/${selectedFile}`;
+    const githubPath = `https://media.githubusercontent.com/media/865589910/chuti/main/2025年日历计划表模板合集 (PDF版)/${encodeURIComponent(selectedFile)}`;
     
     try {
         // 配置PDF.js的worker
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         
-        // 加载PDF文件
-        const loadingTask = pdfjsLib.getDocument(filePath);
-        const pdf = await loadingTask.promise;
+        let pdf;
+        try {
+            // 首先尝试加载本地文件
+            const loadingTask = pdfjsLib.getDocument(localPath);
+            pdf = await loadingTask.promise;
+        } catch (localError) {
+            // 如果本地加载失败，尝试从GitHub加载
+            console.log('本地文件未找到，尝试从GitHub加载...');
+            const loadingTask = pdfjsLib.getDocument({
+                url: githubPath,
+                httpHeaders: {
+                    'Accept': 'application/pdf'
+                }
+            });
+            pdf = await loadingTask.promise;
+        }
+        
+        // 清空加载提示
+        previewDiv.innerHTML = `
+            <h4>👀 日历预览（前两页）</h4>
+            <div class="preview-container">
+                <canvas id="pdfCanvas1" class="pdf-canvas"></canvas>
+                <canvas id="pdfCanvas2" class="pdf-canvas"></canvas>
+            </div>
+        `;
         
         // 渲染第一页
         if (pdf.numPages >= 1) {
