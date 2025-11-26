@@ -497,7 +497,7 @@ function generateCarryBorrow() {
         // 加法：68+2□，个位8+□，十位6+2=8
         // 如果个位8+□<10，十位结果是8；如果个位8+□≥10，十位结果是9
         let tensDigit1 = random(3, 8); // 第一个数的十位
-        let tensDigit2 = random(0, 9); // 第二个数的十位
+        let tensDigit2 = random(1, 9); // 第二个数的十位（确保是两位数，不为0）
         let unitsDigit1 = random(1, 9); // 第一个数的个位
         
         let num1 = tensDigit1 * 10 + unitsDigit1;
@@ -521,7 +521,7 @@ function generateCarryBorrow() {
         // 减法：71-4□，个位1-□，十位7-4=3
         // 如果个位1-□≥0，十位结果是3；如果个位1-□<0，十位结果是2（需要退位）
         let num1 = random(20, 100);
-        let tensDigit2 = random(0, Math.floor(num1 / 10) - 1);
+        let tensDigit2 = random(1, Math.floor(num1 / 10) - 1); // 确保十位不为0，且小于被减数的十位
         let unitsDigit1 = num1 % 10;
         
         let num2_tens = tensDigit2 * 10;
